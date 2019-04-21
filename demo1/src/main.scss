@@ -1,9 +1,8 @@
-@import './index.scss';
 body{
   border: 1px solid green;
-  img{
-    width: 100px;
-    height: 100px;
+  .img{
+    width: 110px;
+    height: 110px;
     border: 1px solid yellow;
     transform: translate(100px,100px);
   }
