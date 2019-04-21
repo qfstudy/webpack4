@@ -49,8 +49,8 @@ module.exports={
         use:[
           'style-loader',
           'css-loader',
-          // 'postcss-loader' 
-          //加前缀  npm i autoprefixer -D
+          'postcss-loader' 
+          //加前缀  npm i autoprefixer postcss-loader -D
           //在项目根目录下配置postcss.config.js文件 
         ]
       },
