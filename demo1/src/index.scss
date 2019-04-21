@@ -1,0 +1,24 @@
+body{
+  img{
+    border: 10px solid goldenrod;
+    background: red;
+    border-radius: 30%;
+  }
+  div{
+    background: green;
+    div{
+      color: red;
+      font-size: 30px;
+      span{
+        display: inline-block;
+        width: 100px;
+        height: 50px;
+        background: black;
+      }
+    }
+    h5{
+      color: aqua;
+      font-size: 60px;
+    }
+  }
+}

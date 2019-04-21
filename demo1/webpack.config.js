@@ -38,11 +38,37 @@ module.exports={
           options: {
             name: '[name].[ext]', //对打包后的图片命名
             outputPath: 'images/', //打包后图片放的位置　dist\images
-            limit: 2048 
+            limit: 204800
             //1024 == 1kb  
             //小于200kb时打包成base64编码的图片否则单独打包成图片
           }
         }
+      },
+      {
+        test: /\.css$/,
+        use:[
+          'style-loader',
+          'css-loader',
+          'postcss-loader' 
+          //加前缀  npm i autoprefixer -D
+          //在项目根目录下配置postcss.config.js文件 
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use:[
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2,
+              //importLoaders
+              //用于配置css-loader作用于@import的资源之前有多少个loader先作用于@import的资源
+            }
+          },
+          'sass-loader',
+          'postcss-loader'
+        ]
       }
     ]
   }
