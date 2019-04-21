@@ -21,13 +21,26 @@ module.exports={
   },
   module: {
     rules:[
+      // {
+      //   test: /\.(png|jpg|gif)$/,
+      //   use: {
+      //     loader: 'file-loader',
+      //     options: {
+      //       name: '[name].[ext]', //对打包后的图片命名
+      //       outputPath: 'images/', //打包后图片放的位置　dist\images
+      //     }
+      //   }
+      // },
       {
         test: /\.(png|jpg|gif)$/,
         use: {
-          loader: 'file-loader',
+          loader: 'url-loader',
           options: {
             name: '[name].[ext]', //对打包后的图片命名
-            outputPath: 'images/' //打包后图片放的位置　dist\images
+            outputPath: 'images/', //打包后图片放的位置　dist\images
+            limit: 2048 
+            //1024 == 1kb  
+            //小于200kb时打包成base64编码的图片否则单独打包成图片
           }
         }
       }
