@@ -1,38 +1,24 @@
 const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const cleanWebpackPlugin = require('clean-webpack-plugin')
+const webpack=require('webpack')
 
 module.exports={
   mode: 'development', //development: 开发环境　production：生产环境
-  //入口文件配置
-  //entry: './src/index.js',
-  //等价于 
-  /*entry: {
-    main: './src/index.js'
-  },*/
+  devtool: 'cheap-module-eval-source-map',
+  //开发环境推荐: cheap-module-eval-source-map
+  //生产环境推荐: cheap-module-source-map
   entry: {
     main: './src/index.js'
   },
   //打包完成后文件存放位置配置
   output: {
-    //filename 设置打包后文件的名字
-    //如果不设置filename，则文件的名字跟入口文件路径的属性名一样
-    filename: 'bundle.js',
-    //path 设置打包完成后文件存放路径
+    //name与entry对象的属性对应
+    filename: '[name].js',
     path: path.resolve(__dirname,'dist')
   },
   module: {
     rules:[
-      // {
-      //   test: /\.(png|jpg|gif)$/,
-      //   use: {
-      //     loader: 'file-loader',
-      //     options: {
-      //       name: '[name].[ext]', //对打包后的图片命名
-      //       outputPath: 'images/', //打包后图片放的位置　dist\images
-      //     }
-      //   }
-      // },
       {
         test: /\.(png|jpg|gif)$/,
         use: {
@@ -79,6 +65,15 @@ module.exports={
     new htmlWebpackPlugin({
       template: './index.html'
     }),
-    new cleanWebpackPlugin()
-  ]
+    new cleanWebpackPlugin(),
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  devServer: {
+    contentBase: './dist',
+    // open: true, //自动打开浏览器
+    // port: 8080,
+    hot: true,　//启用webpack的热模块替换功能
+    hotOnly: true　
+    //devServer.hot在没有页面刷新的情况下启用热模块替换作为构建失败时的后备
+  }
 }

@@ -1,0 +1,6 @@
+body{
+  background: yellow;
+}
+div:nth-of-type(odd){
+  background: cyan;
+}
