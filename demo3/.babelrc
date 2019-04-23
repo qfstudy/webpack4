@@ -1,0 +1,25 @@
+{
+  //这是使用@babel/polyfill的配置方法
+  // "presets": [["@babel/preset-env",{
+    // "targets": {
+    //   "chrome": "67"
+    // },
+    // "useBuiltIns"属性值为 "usage"时，会自动引入polyfill，必须保证已经安装了babel-polyfill
+    // "useBuiltIns"属性值为 "usage"时，需要添加"corejs"配置项，否则报错
+    // "useBuiltIns": "usage", //不需要把polly都打包到代码中，根据代码按需转译
+    // core-js@３和core-js@２二选一
+    // "corejs": 3,  //npm i --save core-js@３
+    // "corejs": 2  //npm i --save core-js@2
+  // }]]
+
+  //这是使用@babel/plugin-transform-runtime的配置方法
+  "presets":["@babel/preset-env"],
+  "plugins": [
+    ["@babel/plugin-transform-runtime",{
+      "helpers": true,
+      "regenerator": true,
+      "useESModules": false,
+      "corejs": 2
+    }]
+  ]
+}
