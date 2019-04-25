@@ -1,10 +1,10 @@
+## webpack4从零到入门
+
 **系列博客链接**
 
 - [webpack4入门学习笔记(一)](https://juejin.im/post/5cbc65e76fb9a068b3679294)
 - [webpack4入门学习笔记(二)](https://juejin.im/post/5cbc7da06fb9a0686c019b79)
 - [webpack4入门学习笔记(三)--Babel的使用](https://juejin.im/post/5cbfb0f86fb9a031ec6d27b8)
-
-
 
 ---
 
@@ -992,10 +992,12 @@ module.exports = {
 `webpack.prod.js`：是生产环境
 `webpack.base.js`：是开发环境和生产环境都用到的配置
 
-这几个文件之间的结合靠'webpack-merge'这个插件。
+这几个文件之间的合并靠'webpack-merge'这个插件。
 
 >安装
 `npm i webpack-merge -D`
+
+**/webpack.dev.js**
 
 ```
 //webpack.dev.js
@@ -1026,6 +1028,8 @@ const devConfig={
 module.exports=merge(baseConfig,devConfig)
 ```
 
+**webapck.prod.js**
+
 ```
 //webapck.prod.js
 
@@ -1040,7 +1044,9 @@ const prodConfig={
 module.exports=merge(baseConfig,prodConfig)
 ```
 
-但是这两个文件还有大量重复的代码，新建`webpack.base.js`
+将这上面两个配置文件共用的代码放到一个配置文件中，新建`webpack.base.js`
+
+**webpack.base.js**
 
 ```
 //webpack.base.js
@@ -1055,7 +1061,7 @@ module.exports={
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname,'dist')
+    path: path.resolve(__dirname,'../dist')
   },
   module: {
     rules:[
@@ -1109,6 +1115,15 @@ module.exports={
 }
 ```
 
+在`webpack.base.js`中修改`output.path`，将dist目录放到项目的根目录下
+
+```
+ output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname,'../dist')
+  }
+```
+
 修改`package.json`的`script`:
 
 ```
@@ -1124,6 +1139,11 @@ module.exports={
 生产环境：运行`npm run build`
 
 配置文件拆分代码下载连接：[github(demo5)](https://github.com/qfstudy/webpack4/tree/master/demo5)
+
+
+
+
+
 
 
 
