@@ -856,6 +856,273 @@ module.exports={
 
 添加`presets`配置项，然后`npm run build`打包，打开打包后的`main.js`查看，可以看到`let`和箭头函数都被转译为ES5语法了。　
 
+---
+
+`Tree Shaking`使用
+---
+
+`Tree Shaking`可以用来剔除`JavaScript`中用不上的死代码。它依赖静态的`ES6`模块化语法，例如通过`import`和`export`导入导出。
+
+需要注意的是要让`Tree Shaking`正常工作的前提是`JavaScript`代码必须采用`ES6`模块化语法，因为`ES6`模块化语法是静态的，这让`Webpack`可以简单的分析出哪些`export`的被`import`过了。
+
+接下来配置`Webpack`让`Tree Shaking`生效
+
+`webpack4`默认保留ES6模块化语句，并没有通过Babel将其转换
+修改`.babelrc`文件为如下：
+
+```
+//.babelrc
+
+{
+   "presets": [["@babel/preset-env",{
+      "useBuiltIns": "usage",
+      "corejs": 2,
+      "modules":false //关闭 Babel 的模块转换功能，保留原本的 ES6 模块化语法
+      //默认是auto，取值还可以是 amd, umd, systemjs, commonjs，auto等
+   }]]
+}
+```
+
+修改`webapck.config.js`，添加 
+```
+optimization: {
+  usedExports: true
+}
+```
+到`module.exports{}`中
+```
+module.exports={
+　mode: 'development',
+  optimization: {
+  //开发坏境使用tree shaking时加usedExports: true
+    usedExports: true　
+  },
+}
+```
+还需通过`package.json`的`"sideEffects"`属性来告诉webpack哪些模块是可以忽略掉，如果没有则设置为`false`，来告知webpack，它可以安全地删除未用到的`export`。
+
+修改`package.json`
+```
+{
+  "name": "your-project",
+  "sideEffects": false
+}
+```
+
+有的模块没有导出模块，在`Tree Shaking`模式下就会被忽略，所以我们需要把这些模块做处理，不需要`Tree Shaking`对这些模块进行处理，可以改为一个数组：
+
+```
+{
+  "name": "your-project",
+  "sideEffects": ["*.css"]
+}
+```
+`"sideEffects": ["*.css"]`表示不对所以css模块使用`Tree Shaking`处理。
+
+**index.js**
+
+```
+//tree shaking import export
+import {cube} from './math.js'
+
+let component = () => {
+  let element = document.createElement('pre')
+  element.innerHTML = [
+    'Hello webpack!',
+    '2 cubed is equal to ' + cube(2)
+  ].join('\n\n');
+  console.log(cube)
+  
+  return element;
+}
+document.body.appendChild(component());
+```
+
+**main.js**
+
+```
+export let square= (x) => {
+  console.log(x)
+  return x * x;
+}
+
+export let cube = (x) => {
+  console.log(x)
+  return x * x * x;
+}
+```
+
+运行`npm run build`，然后打开打包后的js文件:main.js找到下面这段文字
+
+```
+/*!*********************!*\
+   !*** ./src/math.js ***!
+   \*********************/
+ /*! exports provided: square, cube */
+ /*! exports used: cube */
+ /***/
+```
+从上面这段文字可以看出`Tree Shaking`生效了，但是在开发环境下，并没有把没有用的代码删掉，因为　环境下还需要对代码进行调试。
+
+我们已经找出需要删除的“未引用代码(dead code)”，然而，不仅仅是要找出，还要删除它们。为此，我们需要将`mode`配置选项设置为`production`，将optimization对象删掉，修改`devtool`配置选项
+
+**webpack.config.js**
+
+```
+module.exports = {
+  mode: 'production',
+  devtool: 'cheap-module-source-map'
+}
+```
+
+运行`npm run build`，查看打包结果就可以看到没有用的代码被删掉了。
+
+[`Tree Shaking`参考代码下载链接：github(demo4)](https://github.com/qfstudy/webpack4/tree/master/demo4)
+
+---
+
+`Develoment`和`Production`不同环境的配置
+---
+
+因为在不同的环境下，webpack的配置稍微有点区别，如果我们需要在不同的换将下切换，就得修改webpack配置，这是很麻烦而且还容易改错，所以我们需要把配置文件进行拆分。
+
+在项目根目录下新建build文件夹，然后在build文件夹中新建`webpack.dev.js`、`webpack.prod.js`和`webpack.base.js`三个文件
+
+`webpack.dev.js`：是开发环境
+`webpack.prod.js`：是生产环境
+`webpack.base.js`：是开发环境和生产环境都用到的配置
+
+这几个文件之间的结合靠'webpack-merge'这个插件。
+
+>安装
+`npm i webpack-merge -D`
+
+```
+//webpack.dev.js
+
+const webpack=require('webpack')
+const merge = require('webpack-merge')
+const baseConfig=require('./webpack.base')
+
+const devConfig={
+  mode: 'development', 
+  devtool: 'cheap-module-eval-source-map',
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  optimization: {
+    usedExports: true
+  },
+  devServer: {
+    contentBase: './dist',
+    // open: true, //自动打开浏览器
+    // port: 8080,
+    hot: true,　//启用webpack的热模块替换功能
+    //hotOnly: true　
+    //devServer.hot在没有页面刷新的情况下启用热模块替换作为构建失败时的后备
+  }
+}
+
+module.exports=merge(baseConfig,devConfig)
+```
+
+```
+//webapck.prod.js
+
+const merge = require('webpack-merge')
+const baseConfig=require('./webpack.base')
+
+const prodConfig={
+  mode: 'production', 
+  devtool: 'cheap-module-source-map'
+}
+
+module.exports=merge(baseConfig,prodConfig)
+```
+
+但是这两个文件还有大量重复的代码，新建`webpack.base.js`
+
+```
+//webpack.base.js
+
+const path = require('path')
+const htmlWebpackPlugin = require('html-webpack-plugin')
+const cleanWebpackPlugin = require('clean-webpack-plugin')
+
+module.exports={
+  entry: {
+    main: './src/index.js'
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname,'dist')
+  },
+  module: {
+    rules:[
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            name: '[name].[ext]', 
+            outputPath: 'images/', 
+            limit: 2048           
+          }
+        }
+      },
+      {
+        test: /\.css$/,
+        use:[
+          'style-loader',
+          'css-loader',
+          'postcss-loader' 
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use:[
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2,
+              modules: true 
+            }
+          },
+          'sass-loader',
+          'postcss-loader'
+        ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
+    ]
+  },
+  plugins: [
+    new htmlWebpackPlugin({
+      template: './index.html'
+    }),
+    new cleanWebpackPlugin(),
+  ]
+}
+```
+
+修改`package.json`的`script`:
+
+```
+{
+  "scripts": {
+    "dev": "webpack-dev-server --config ./build/webpack.dev.js",
+    "build": "webpack --config ./build/webpack.prod.js"
+  },
+}
+```
+
+配置文件拆分代码下载连接：[github(demo5)](https://github.com/qfstudy/webpack4/tree/master/demo5)
+
+
 
 
 
