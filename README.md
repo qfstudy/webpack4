@@ -1120,6 +1120,9 @@ module.exports={
 }
 ```
 
+开发环境：运行`npm run dev`，打开浏览器访问`http://localhost:8080/`就可以看到结果
+生产环境：运行`npm run build`
+
 配置文件拆分代码下载连接：[github(demo5)](https://github.com/qfstudy/webpack4/tree/master/demo5)
 
 
