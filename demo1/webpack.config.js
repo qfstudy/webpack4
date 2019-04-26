@@ -1,22 +1,18 @@
 const path = require('path')
 
 module.exports={
-  mode: 'development', //development: 开发环境　production：生产环境
-  //入口文件配置
-  //entry: './src/index.js',
-  //等价于 
-  /*entry: {
-    main: './src/index.js'
-  },*/
+  //mode development: 开发环境　production：生产环境
+  mode: 'development', 
+  //entry 入口文件配置  
   entry: {
-    main: './src/index.js'
+    index: './src/index.js'
   },
-  //打包完成后文件存放位置配置
+  //打包完成后文件输出位置配置
   output: {
     //filename 设置打包后文件的名字
     //如果不设置filename，则文件的名字跟入口文件路径的属性名一样
     filename: 'bundle.js',
-    //path 设置打包完成后文件存放路径
+    //path 设置打包完成后文件输出路径
     path: path.resolve(__dirname,'dist')
   },
   module: {
@@ -27,7 +23,7 @@ module.exports={
       //     loader: 'file-loader',
       //     options: {
       //       name: '[name].[ext]', //对打包后的图片命名
-      //       outputPath: 'images/', //打包后图片放的位置　dist\images
+      //       outputPath: 'images/' //打包后图片输出的位置　dist\images
       //     }
       //   }
       // },
@@ -38,9 +34,9 @@ module.exports={
           options: {
             name: '[name].[ext]', //对打包后的图片命名
             outputPath: 'images/', //打包后图片放的位置　dist\images
-            limit: 2048
+            limit: 20480
             //1024 == 1kb  
-            //小于200kb时打包成base64编码的图片否则单独打包成图片
+            //小于20kb时打包成base64编码的图片否则单独打包成图片
           }
         }
       },
@@ -48,10 +44,15 @@ module.exports={
         test: /\.css$/,
         use:[
           'style-loader',
-          'css-loader',
-          'postcss-loader' 
-          //加前缀  npm i autoprefixer postcss-loader -D
-          //在项目根目录下配置postcss.config.js文件 
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true
+            }
+          },
+          'postcss-loader'  
+          //加前缀  npm i autoprefixer -D
+          //在项目根目录下配置postcss.config.js文件
         ]
       },
       {
@@ -67,10 +68,11 @@ module.exports={
               modules: true //加载css模块化打包，避免样式文件之间相互影响
             }
           },
-          'sass-loader',
-          'postcss-loader'
+          'postcss-loader',
+          'sass-loader'
         ]
       }
+
     ]
   }
 }

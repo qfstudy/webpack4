@@ -1,0 +1,6 @@
+body{
+  border-radius: 10%;
+}
+body .img{
+  border: 10px solid yellow;
+}

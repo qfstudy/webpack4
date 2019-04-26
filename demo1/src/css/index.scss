@@ -1,0 +1,14 @@
+body{
+  border: 1px solid red;
+  width: 300px;
+  height: 300px;
+  img{
+    width: 100px;
+    height: 100px;
+    border-radius: 10%;
+    transform: translate(100px,100px);
+  }
+  .img{
+    border: 10px solid royalblue;
+  }
+}
