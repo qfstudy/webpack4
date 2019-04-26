@@ -1,0 +1,7 @@
+body{
+  background: yellow;
+}
+div:nth-of-type(odd){
+  background: chartreuse;
+  font-size: 18px;
+}
