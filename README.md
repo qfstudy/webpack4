@@ -1,8 +1,6 @@
 一、webpack4--基本配置
 ---
 
-这一部分通过webpack的基本配置，使用loader对图片和样式进行打包，从而了解webpack4简单的用方法，保证自己能够配置正确，提升学习动力。
-
 ### 1.初始化配置
 ```
 mkdir webpack4
@@ -389,7 +387,7 @@ body .img{
 ```
 结果
 
-![](https://upload-images.jianshu.io/upload_images/9437556-8969b7a3247e4b84.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://user-gold-cdn.xitu.io/2019/4/26/16a58f3d3a75d639?w=782&h=66&f=png&s=17052)
 
 可以看到添加了一个class，类名是一串比较复杂的字符串，从而避免这个样式对别的元素产生影响。
 
@@ -404,7 +402,7 @@ body .img{
 
 在上一部分我们都是手动在dist目录下创建index.html引入js文件查看打包结果，这样会很麻烦。我们可以使用`html-webpack-plugin`来自动生产index.html，并且能够自动引入打包好的文件，直接打开生产的html就可以看到打包结构。
 
-#### １．`html-webpack-plugin`的使用
+#### 1.`html-webpack-plugin`的使用
 >安装
 `npm i html-webpack-plugin -D`
 
@@ -455,7 +453,7 @@ module.exports={
 ```
 运行`npm run build`，可以看到dist目录下自动生产index.html，并且还自动引入js文件
 
-#### 2．`clean-webpack-plugin`的使用
+#### 2.`clean-webpack-plugin`的使用
 每次打包生成的dist目录，如果改一次代码，都得要删除一次dist目录，这样很麻烦，可以通过`clean-webpack-plugin`在每次打包的前自动清空dist目录。
 
 >安装
@@ -493,7 +491,7 @@ module.exports={
 ```
 运行`npm run build`，可以自己测试，每次打包前都会把dist目录下的文件删掉。
 
-#### ３．`entry`和`output`多入口配置
+#### 3.`entry`和`output`多入口配置
 
 ```
 module.exports={
@@ -519,7 +517,7 @@ module.exports={
 
 运行`npm run build`，就会在dist目录下生产`index.js`和`main.js`
 
-#### ４．配置`devtool`
+#### 4.配置`devtool`
 devtool决定源代码与打包后的代码之间的映射关系，方便对代码进行调试。
 
 开发环境推荐: cheap-module-eval-source-map
@@ -534,7 +532,7 @@ module.exports={
 }
 ```
 
-#### ５．配置`devServer`
+#### 5.配置`devServer`
 
 [文档：devServer](https://webpack.js.org/configuration/dev-server/#root)
 
@@ -732,7 +730,7 @@ module.exports = {
 
 首先实现对ES6语法的转译
 
-在webpack4目录下新建demo３文件夹，将demo２目录下的所有东西复制到demo３中
+在webpack4目录下新建demo3文件夹，将demo2目录下的所有东西复制到demo3中
 
 **安装`babel-loader、 @babel/core、@babel/preset-env`**
 
@@ -797,11 +795,11 @@ arr.map((item)=>{
 
 引入`@babel/polyfill`前，main.js的大小为29.5KB
 
-![](https://upload-images.jianshu.io/upload_images/9437556-59a80e3e89f8d777.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://user-gold-cdn.xitu.io/2019/4/24/16a4cd183906e2aa?w=716&h=159&f=png&s=32165)
 
 引入`@babel/polyfill`后，main.js的大小为1MB
 
-![](https://upload-images.jianshu.io/upload_images/9437556-8b0ae648e4d1c039.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://user-gold-cdn.xitu.io/2019/4/24/16a4cd183928547b?w=702&h=162&f=png&s=34480)
 
 **注意：以上对比都是在没有`targets`这个选项的情况下，因为有些浏览器几乎都支持ES6，在这种情况下，`@babel/preset-env`将不会对代码进行处理。**
 
@@ -852,7 +850,7 @@ module.exports={
 
 执行`npm run build`，打包后的文件大小为`165KB`
 
-![](https://upload-images.jianshu.io/upload_images/9437556-7e2dde1460a060fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://user-gold-cdn.xitu.io/2019/4/24/16a4cd1839946f90?w=707&h=160&f=png&s=46269)
 
 但是，在开发类库或是第三方模块时不适合使用`@babel/polyfill`，所以接下来使用`@babel/plugin-transform-runtime`来解决这个问题。
 
@@ -1002,7 +1000,7 @@ export let cube = (x) => {
  /***/
 ```
 
-从上面这段文字可以看出`Tree Shaking`生效了，但是在开发环境下，并没有把没有用的代码删掉，因为　环境下还需要对代码进行调试。
+从上面这段文字可以看出`Tree Shaking`生效了，但是在开发环境下，并没有把没有用的代码删掉，因为在开发环境下还需要对代码进行调试。
 
 我们已经找出需要删除的“未引用代码(dead code)”，然而，不仅仅是要找出，还要删除它们。为此，我们需要将`mode`配置选项设置为`production`，将optimization对象删掉，修改`devtool`配置选项
 
@@ -1165,6 +1163,242 @@ module.exports={
 
 开发环境：运行`npm run dev`，打开浏览器访问`http://localhost:8080/`就可以看到结果
 生产环境：运行`npm run build`
+
+---
+
+六、SplitChunksPlugin插件的用法
+---
+
+#### 1.SplitChunksPlugin插件介绍
+
+`webpack 4`移除`CommonsChunkPlugin`，取而代之的是`SplitChunksPlugin`。下面介绍`SplitChunksPlugin`的用法。
+
+在`webpack4目录`下新建`demo6目录`，将`demo5目录`下的所有文件都复制到`demo6`中。
+
+>安装 lodash
+
+`npm i lodash --save`
+
+在`package.json`添加
+```
+"scripts": {
+    "dev-build": "webpack --config ./build/webpack.dev.js"
+  }
+```
+
+修改`index.js`
+```
+import _ from 'lodash'
+console.log(_.join(['lodash', 'babel', 'webpack'], '-'))
+```
+运行`npm run dev-build`后，demo6目录结构如下
+```
+demo6
+├── demo6/build
+│   ├── demo6/build/webpack.base.js
+│   ├── demo6/build/webpack.dev.js
+│   └── demo6/build/webpack.prod.js
+├── demo6/dist
+│   ├── demo6/dist/index.html
+│   └── demo6/dist/main.js
+├── demo6/index.html
+├── demo6/package.json
+├── demo6/package-lock.json
+├── demo6/postcss.config.js
+└── demo6/src
+    └── demo6/src/index.js
+```
+dist目录下只有main.js一个js文件，lodash库也一起打包到main.js里面，这种情况下会导致文件变大，导致页面加载速度变慢，我们需要把第三库或是需要单独打包的代码给分割出来。
+
+这时需要使用webpack4自带的插件`SplitChunksPlugin`，默认情况下它将只会影响按需加载的代码块
+
+在`webpack.config.js`添加`optimization.splitChunks.chunks`
+```
+optimization: {
+   splitChunks: {
+    //chunks: all, async, initial.
+    //async针对异步加载的chunk做切割，initial针对初始chunk，all针对所有chunk。
+     chunks: 'async'
+   }
+}
+```
+运行`npm run dev-build`后，打包后的代码并没有分割。
+
+修改`optimization.splitChunks.chunks`为`all`
+```
+optimization: {
+   splitChunks: {
+    //chunks: all, async, initial.
+    //async针对异步加载的chunk做切割，initial针对初始chunk，all针对所有chunk。
+     chunks: 'all'
+   }
+}
+```
+
+运行`npm run dev-build`后，demo6目录结构如下
+```
+demo6
+├── demo6/build
+│   ├── demo6/build/webpack.base.js
+│   ├── demo6/build/webpack.dev.js
+│   └── demo6/build/webpack.prod.js
+├── demo6/dist
+│   ├── demo6/dist/index.html
+│   ├── demo6/dist/main.js
+│   └── demo6/dist/vendors~main.js
+├── demo6/index.html
+├── demo6/package.json
+├── demo6/package-lock.json
+├── demo6/postcss.config.js
+└── demo6/src
+    └── demo6/src/index.js
+```
+可以看到dist目录下多了`vendors~main.js`文件，说明`SplitChunksPlugin`插件生效了
+
+接下来先看`optimization.splitChunks`的默认配置
+```
+module.exports = {
+  //...
+  optimization: {
+    splitChunks: {
+      chunks: 'async',
+      minSize: 30000,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      name: true,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  }
+}
+```
+
+- chunks: 表示将对哪些块进行优化，可选async, initial, all，async对异步加载的模块进行分割，initial对初始模块，all对所有模块
+
+- minSize: 加载的模块不小于30kb才进行分割
+
+- minChunks: 生成的`chunk`，共享该模块的chunk必须不小于１时才分割
+
+- maxAsyncRequests：按需加载时的最大并行请求数
+
+- maxInitialRequests：入口处的最大并行请求数
+
+- automaticNameDelimiter：默认情况下，webpack将使用块的名称和名称生成名称（例如vendors~main.js）。此选项指定用于生成的名称的分隔符
+
+- name：生成chunk的名字，如果设成true，将根据模块和缓存组配置结合生成名称
+
+- cacheGroups： 缓存组可以继承和/或覆盖任何选项splitChunks.*; 但是test，priority并且reuseExistingChunk只能在高速缓存组级别配置。要禁用任何默认缓存组，请将其设置为false。
+
+- test：控制此缓存组选择的模块
+
+- priority：模块可以属于多个缓存组，模块则归于缓存组priority高的
+- reuseExistingChunk: 如果当前块包含已拆分的模块，则将重用它而不是生成新的块。
+
+从以上可以看出来，默认的配置只对异步加载的模块有效
+
+**修改index.js，异步加载lodash**
+```
+function getComponent(){
+  return import('lodash').then(({default: _})=>{
+    var element=document.createElement('div')
+    element.innerHTML=_.join(['lodash', 'babel', 'webpack'], '-')
+    return element
+  })
+}
+
+getComponent().then(element=>{
+  document.body.appendChild(element)
+})
+```
+这时运行`npm run dev-build`会报错，需要下载安装` @babel/plugin-syntax-dynamic-import`
+` npm i @babel/plugin-syntax-dynamic-import -D`
+
+**在.babelrc中添加**
+```
+ "plugins": ["@babel/plugin-syntax-dynamic-import"] 
+```
+
+再次运行`npm run dev-build`，此时打包成功，目录结构如下
+```
+demo6
+├── demo6/build
+│   ├── demo6/build/webpack.base.js
+│   ├── demo6/build/webpack.dev.js
+│   └── demo6/build/webpack.prod.js
+├── demo6/dist
+│   ├── demo6/dist/0.js
+│   ├── demo6/dist/index.html
+│   └── demo6/dist/main.js
+├── demo6/index.html
+├── demo6/package.json
+├── demo6/package-lock.json
+├── demo6/postcss.config.js
+└── demo6/src
+    └── demo6/src/index.js
+```
+可以看到dist目录下`0.js`，就是对lodash打包后的文件，有时我们希望能够改变`0.js`的名字
+
+**修改index.js**，添加`/* webpackChunkName:"lodash" */`
+```
+function getComponent(){
+  return import(/* webpackChunkName:"lodash" */'lodash').then(({default: _})=>{
+    var element=document.createElement('div')
+    element.innerHTML=_.join(['lodash', 'babel', 'webpack'], '-')
+    return element
+  })
+}
+
+getComponent().then(element=>{
+  document.body.appendChild(element)
+})
+```
+运行`npm run dev-build`，发现`0.js`变为`vendors~lodash.js`
+
+也可以通过设置`optimization.splitChunks.cacheGroups.vendors.name`来修改打包后的文件名字
+
+修改`optimization.splitChunks`配置
+```
+optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 30000,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      name: true,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          name: 'vendors'
+        },
+        default: {
+          minChunks: 1,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  },
+```
+运行`npm run dev-build`，发现打包后的文件名字变为`vendors.js`
+
+以上就是`SplitChunksPlugin`的简单用法
+
+[详情请访问官网](https://webpack.js.org/plugins/split-chunks-plugin/)
 
 
 
