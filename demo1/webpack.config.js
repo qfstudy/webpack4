@@ -68,6 +68,7 @@ module.exports={
               modules: true //加载css模块化打包，避免样式文件之间相互影响
             }
           },
+          //postcss-loader要在sass-loader上面,否则scss文件中有注释会报错
           'postcss-loader',
           'sass-loader'
         ]
